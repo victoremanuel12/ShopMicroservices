@@ -1,5 +1,4 @@
 ﻿using BuildBlocks.CQRS;
-using Catolog.API.Models;
 
 namespace Catolog.API.Products.CreateProduct
 {
