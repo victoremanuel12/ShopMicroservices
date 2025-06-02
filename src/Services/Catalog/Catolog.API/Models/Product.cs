@@ -9,15 +9,6 @@
         public string Description { get; set; } = default!;
         public string ImageFile { get; set; } = default!;
         public decimal Price { get; set; }
-        protected Product() { }
-        public Product(Guid id, string name, List<string> category, string description, string imageFile, decimal price)
-        {
-            Id = id;
-            Name = name;
-            Category = category;
-            Description = description;
-            ImageFile = imageFile;
-            Price = price;
-        }
+       
     }
 }
