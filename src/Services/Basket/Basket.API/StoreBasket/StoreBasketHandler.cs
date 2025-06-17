@@ -11,8 +11,8 @@ namespace Basket.API.StoreBasket
         public StoreBasketCommandValidator()
         {
             RuleFor(x => x.Cart).NotNull().WithMessage("Cart can't be null");
-            RuleFor(x => x.Cart.UserName).NotEmpty().WithMessage("UserName is requires");
-
+            RuleFor(x => x.Cart.UserName).NotEmpty().WithMessage("UserName is required");
+            RuleFor(x => x.Cart.Items).NotEmpty().WithMessage("Itens of Cart is required");
         }
     }
     public class handle(IBasketRepository _repository) : ICommandHandler<StoreBasketCommand, StoreBasketResult>

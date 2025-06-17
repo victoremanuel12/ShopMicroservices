@@ -15,10 +15,21 @@ builder.Services.AddMediatR(config =>
 builder.Services.AddMarten(opt =>
 {
     opt.Connection(connection!);
-    //opt.AutoCreateSchemaObjects = Weasel.Core.AutoCreate.All;
     opt.Schema.For<ShoppingCart>().Identity(x => x.UserName);
 }).UseLightweightSessions();
 builder.Services.AddScoped<IBasketRepository, BasketRepository>();
+builder.Services.Decorate<IBasketRepository, CachedBasketRepository>();
+builder.Services.AddValidatorsFromAssembly(assembly);
+//decorator feito manualmente.
+//builder.Services.AddScoped<IBasketRepository>(provider =>
+//{
+//    var basketRepository = provider.GetService<IBasketRepository>();
+//    return new CachedBasketRepository(basketRepository, provider.GetRequiredService<IDistributedCache>());
+//});
+builder.Services.AddStackExchangeRedisCache(opt =>
+{
+    opt.Configuration = builder.Configuration.GetConnectionString("Redis");
+});
 builder.Services.AddExceptionHandler<CustomExceptionHandler>();
 var app = builder.Build();
 
