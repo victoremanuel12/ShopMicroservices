@@ -4,11 +4,11 @@ namespace Discount.Grpc.Data
 {
     public static class Extentions
     {
-        public static void MigrateDatabase(this IApplicationBuilder app)
+        public static async void  MigrateDatabase(this IApplicationBuilder app)
         {
             using var scope = app.ApplicationServices.CreateScope();
             using var context = scope.ServiceProvider.GetRequiredService<DiscountContext>();
-            context.Database.MigrateAsync();
+            await context.Database.MigrateAsync();
         }
     }
 }

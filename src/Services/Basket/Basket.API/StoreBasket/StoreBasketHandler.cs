@@ -3,6 +3,7 @@
 
 
 using Discount.Grpc;
+using NetTopologySuite.Index.HPRtree;
 
 namespace Basket.API.StoreBasket
 {
@@ -30,11 +31,13 @@ namespace Basket.API.StoreBasket
 
         public async Task DeductDiscount(ShoppingCart cart, CancellationToken cancellationToken)
         {
-            foreach (var item in cart.Items)
+            var discountTasks = cart.Items.Select(async item =>
             {
                 var coupon = await discountProto.GetDiscountAsync(new GetDiscountRequest { ProductName = item.ProductName }, cancellationToken: cancellationToken);
                 item.Price -= coupon.Amount;
-            }
+            });
+            
+            await Task.WhenAll(discountTasks);
         }
     }
 }
