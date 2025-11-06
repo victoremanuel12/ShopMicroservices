@@ -1,0 +1,15 @@
+﻿using Ordering.Domain.Abstraction;
+
+namespace Ordering.Domain.Models
+{
+    public class Product : Entity<Guid>
+    {
+        public string Name { get; private set; } = default!;
+        public decimal Price { get; private set; } = default!;
+        public Product(string name, decimal price)
+        {
+            Name = name;
+            Price = price;
+        }
+    }
+}
