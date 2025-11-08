@@ -2,8 +2,10 @@
 {
     public record CustomerId : Id<Guid>
     {
-        public CustomerId(Id<Guid> original) : base(original)
+        private CustomerId(Guid value) : base(value)
         {
         }
+        public static CustomerId New() => New<CustomerId>();
+        public static CustomerId Rehydrate(Guid value) => Rehydrate<CustomerId>(value);
     }
 }

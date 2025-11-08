@@ -2,18 +2,20 @@
 {
     public record OrderName
     {
-        public string Value { get; private set; }
-        public OrderName(string value)
+        private const int MaxLength = 5;
+        public string Value { get; }
+        private OrderName(string value) => Value = value;
+        public static OrderName Create(string value)
         {
             if (string.IsNullOrWhiteSpace(value))
             {
-                throw new ArgumentException("Order name cannot be null or empty.", nameof(value));
+                throw new ArgumentException("Order name cannot be null or empty.");
             }
-            if (value.Length > 100)
+            if (value.Length > MaxLength)
             {
-                throw new ArgumentException("Order name cannot exceed 100 characters.", nameof(value));
+                throw new ArgumentException("Order name cannot exceed 100 characters.");
             }
-            Value = value;
+            return new OrderName(value);
         }
     }
 }

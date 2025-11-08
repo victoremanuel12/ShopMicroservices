@@ -14,5 +14,20 @@
 
             Value = value;
         }
+        public static TId New<TId>() where TId : Id<TValue>
+        {
+            if (typeof(TValue) == typeof(Guid))
+            {
+                var newValue = (TValue)(object)Guid.NewGuid();
+                return (TId)Activator.CreateInstance(typeof(TId), newValue)!;
+            }
+
+            throw new DomainException($"Cannot auto-generate value for {typeof(TValue).Name}");
+        }
+
+        public static TId Rehydrate<TId>(TValue value) where TId : Id<TValue>
+        {
+            return (TId)Activator.CreateInstance(typeof(TId), value)!;
+        }
     }
 }

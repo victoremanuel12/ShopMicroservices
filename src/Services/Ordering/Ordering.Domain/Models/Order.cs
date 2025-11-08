@@ -1,10 +1,10 @@
-﻿
-
-namespace Ordering.Domain.Models
+﻿namespace Ordering.Domain.Models
 {
     public class Order : Aggregate<OrderId>
     {
         private readonly List<OrderItem> _orderItems = new();
+
+
         public IReadOnlyList<OrderItem> OrderItems => _orderItems.AsReadOnly();
         public CustomerId CustomerId { get; private set; } = default!;
         public OrderName OrderName { get; private set; } = default!;
@@ -15,9 +15,60 @@ namespace Ordering.Domain.Models
         public OrderStatus Status { get; private set; } = OrderStatus.Pending;
         public decimal TotalPrice { get => OrderItems.Sum(x => x.Price * x.Quantity); private set { } }
 
-        public void AddOrderItem(OrderItem item)
+        public static Order Create(
+            OrderId id,
+            CustomerId customerId,
+            OrderName orderName,
+            Address shippingAddress,
+            Address billingAddress,
+            Payment payment,
+            OrderStatus status
+            )
         {
-            _orderItems.Add(item);
+            var order = new Order
+            {
+                Id = id,
+                CustomerId = customerId,
+                OrderName = orderName,
+                ShippingAddress = shippingAddress,
+                BillingAddress = billingAddress,
+                Payment = payment,
+                Status = status,
+            };
+            order.AddDomainEvent(new OrderCreatedEvent(order));
+            return order;
+        }
+        public void Update(
+            OrderName orderName,
+            Address shippingAddress,
+            Address billingAddress,
+            Payment payment,
+            OrderStatus status)
+        {
+            OrderName = orderName;
+            ShippingAddress = shippingAddress;
+            BillingAddress = billingAddress;
+            Payment = payment;
+            Status = status;
+            AddDomainEvent(new OrderUpdatedEvent(this));
+        }
+        public void Add(ProductId id, int quantity, decimal price)
+        {
+
+            if (decimal.IsNegative(price))
+                throw new ArgumentException("Price cannot be negative.", nameof(price));
+            if (int.IsNegative(quantity))
+                throw new ArgumentException("Quantity cannot be negative.", nameof(quantity));
+            if (quantity == 0)
+                throw new ArgumentException("Quantity cannot be zero.", nameof(quantity));
+            var orderItem = new OrderItem(Id, id, quantity, price);
+            _orderItems.Add(orderItem);
+        }
+        public void Remove(ProductId productId)
+        {
+            var orderItem = _orderItems.FirstOrDefault(x => x.ProductId == productId);
+            if (orderItem is not null)
+                _orderItems.Remove(orderItem);
         }
     }
 }

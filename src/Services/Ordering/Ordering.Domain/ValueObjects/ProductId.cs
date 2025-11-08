@@ -2,9 +2,11 @@
 {
     public sealed record ProductId : Id<Guid>
     {
-        public ProductId(Guid value) : base(value)
+        private ProductId(Guid value) : base(value)
         {
         }
+        public static ProductId New() => New<ProductId>();
+        public static ProductId Rehydrate(Guid value) => Rehydrate<ProductId>(value);
 
     }
 }
