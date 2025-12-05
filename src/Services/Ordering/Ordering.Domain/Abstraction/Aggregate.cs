@@ -1,5 +1,7 @@
 ﻿
 
+using Ordering.Domain.Abstraction.interfaces;
+
 namespace Ordering.Domain.Abstraction
 {
     public abstract class Aggregate<TId> : Entity<TId>, IAggregate<TId>

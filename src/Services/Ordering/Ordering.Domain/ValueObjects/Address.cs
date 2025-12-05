@@ -47,7 +47,7 @@ namespace Ordering.Domain.ValueObjects
             string zipCode)
         {
             if (string.IsNullOrWhiteSpace(firstName))
-                throw new ArgumentException("First name cannot be empty.", nameof(firstName));
+                throw new EmptyFirstNameException();
 
             if (string.IsNullOrWhiteSpace(lastName))
                 throw new ArgumentException("Last name cannot be empty.", nameof(lastName));

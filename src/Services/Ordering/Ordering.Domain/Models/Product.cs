@@ -1,6 +1,4 @@
-﻿using Ordering.Domain.Abstraction;
-
-namespace Ordering.Domain.Models
+﻿namespace Ordering.Domain.Models
 {
     public class Product : Entity<ProductId>
     {
@@ -16,10 +14,10 @@ namespace Ordering.Domain.Models
         public static Product Create(ProductId id, string name, decimal price)
         {
             if (string.IsNullOrWhiteSpace(name))
-                throw new ArgumentException("First name cannot be empty.", nameof(name));
+                throw new EmptyFirstNameException();
 
             if (decimal.IsNegative(price))
-                throw new ArgumentException("Price cannot be negative.", nameof(price));
+                throw new NegativePriceException();
 
             return new Product(id, name, price);
         }

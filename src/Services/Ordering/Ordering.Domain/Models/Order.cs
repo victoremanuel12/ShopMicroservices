@@ -13,7 +13,7 @@
         public decimal TotalAmount { get; private set; } = default!;
         public Payment Payment { get; private set; } = default!;
         public OrderStatus Status { get; private set; } = OrderStatus.Pending;
-        public decimal TotalPrice { get => OrderItems.Sum(x => x.Price * x.Quantity); private set { } }
+        public decimal TotalPrice { get => OrderItems.Sum(x => x.Price * x.Quantity); }
 
         public static Order Create(
             OrderId id,
@@ -56,19 +56,21 @@
         {
 
             if (decimal.IsNegative(price))
-                throw new ArgumentException("Price cannot be negative.", nameof(price));
+                throw new NegativePriceException();
             if (int.IsNegative(quantity))
-                throw new ArgumentException("Quantity cannot be negative.", nameof(quantity));
+                throw new NegativeQuantityException();
             if (quantity == 0)
-                throw new ArgumentException("Quantity cannot be zero.", nameof(quantity));
+                throw new ZeroQuantityException();
+
             var orderItem = new OrderItem(Id, id, quantity, price);
             _orderItems.Add(orderItem);
         }
         public void Remove(ProductId productId)
         {
             var orderItem = _orderItems.FirstOrDefault(x => x.ProductId == productId);
-            if (orderItem is not null)
-                _orderItems.Remove(orderItem);
+            if (orderItem is null)
+                throw new OrderItemNotFoundException(productId);
+            _orderItems.Remove(orderItem);
         }
     }
 }

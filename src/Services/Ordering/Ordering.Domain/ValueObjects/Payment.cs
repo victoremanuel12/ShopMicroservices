@@ -31,14 +31,18 @@
             string cvv,
             string paymentMethod)
         {
-            if (string.IsNullOrWhiteSpace(cardNumber) || cardNumber.Length != CardNumberLength || !long.TryParse(cardNumber, out _))
-                throw new ArgumentException($"Card number must be {CardNumberLength} digits.", nameof(cardNumber));
+            if (string.IsNullOrWhiteSpace(cardNumber) 
+                || cardNumber.Length != CardNumberLength 
+                || !long.TryParse(cardNumber, out _))
+                throw new InvalidCardNumberException(cardNumber);
             if (string.IsNullOrWhiteSpace(expiration))
-                throw new ArgumentException("Expiration date cannot be empty.", nameof(expiration));
-            if (string.IsNullOrWhiteSpace(cvv) || cvv.Length != CVVLength || !int.TryParse(cvv, out _))
-                throw new ArgumentException($"CVV must be {CVVLength} digits.", nameof(cvv));
+                throw new InvalidExpirationException(expiration);
+            if (string.IsNullOrWhiteSpace(cvv) 
+                || cvv.Length != CVVLength 
+                || !int.TryParse(cvv, out _))
+                throw new InvalidCVVException(CVVLength,cvv);
             if (string.IsNullOrWhiteSpace(paymentMethod))
-                throw new ArgumentException("Payment method cannot be empty.", nameof(paymentMethod));
+                throw new EmptyPaymentMethodException();
             return new Payment(cardName, cardNumber, expiration, cvv, paymentMethod);
         }
     }
