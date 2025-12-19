@@ -1,5 +1,4 @@
-﻿using System;
-using System.Net.Mail;
+﻿using System.Net.Mail;
 
 namespace Ordering.Domain.ValueObjects
 {
@@ -7,7 +6,7 @@ namespace Ordering.Domain.ValueObjects
     {
         public string FirstName { get; } = default!;
         public string LastName { get; } = default!;
-        public string? EmailAddress { get; } = default!;
+        public string EmailAddress { get; } = default!;
         public string AddressLine { get; } = default!;
         public string Street { get; } = default!;
         public string Country { get; } = default!;
@@ -19,7 +18,7 @@ namespace Ordering.Domain.ValueObjects
         private Address(
             string firstName,
             string lastName,
-            string? emailAddress,
+            string emailAddress,
             string addressLine,
             string street,
             string country,
@@ -39,38 +38,25 @@ namespace Ordering.Domain.ValueObjects
         public static Address Create(
             string firstName,
             string lastName,
-            string? emailAddress,
+            string emailAddress,
             string addressLine,
             string street,
             string country,
             string state,
             string zipCode)
         {
-            if (string.IsNullOrWhiteSpace(firstName))
-                throw new EmptyFirstNameException();
+            ValidateRequired(firstName, nameof(firstName));
+            ValidateRequired(lastName, nameof(lastName));
+            ValidateRequired(addressLine, nameof(addressLine));
+            ValidateRequired(street, nameof(street));
+            ValidateRequired(country, nameof(country));
+            ValidateRequired(state, nameof(state));
+            ValidateRequired(zipCode, nameof(zipCode));
 
-            if (string.IsNullOrWhiteSpace(lastName))
-                throw new ArgumentException("Last name cannot be empty.", nameof(lastName));
-
-            if (string.IsNullOrWhiteSpace(addressLine))
-                throw new ArgumentException("Address line cannot be empty.", nameof(addressLine));
-
-            if (string.IsNullOrWhiteSpace(street))
-                throw new ArgumentException("Street cannot be empty.", nameof(street));
-
-            if (string.IsNullOrWhiteSpace(country))
-                throw new ArgumentException("Country cannot be empty.", nameof(country));
-
-            if (string.IsNullOrWhiteSpace(state))
-                throw new ArgumentException("State cannot be empty.", nameof(state));
-
-            if (string.IsNullOrWhiteSpace(zipCode))
-                throw new ArgumentException("Zip code cannot be empty.", nameof(zipCode));
-
-            if (!string.IsNullOrWhiteSpace(emailAddress))
+            if (string.IsNullOrWhiteSpace(emailAddress) &&
+                !MailAddress.TryCreate(emailAddress, out _))
             {
-                if (!MailAddress.TryCreate(emailAddress, out _))
-                    throw new ArgumentException("Invalid email address format.", nameof(emailAddress));
+                throw new InvalidEmailException(emailAddress);
             }
 
             return new Address(
@@ -83,6 +69,12 @@ namespace Ordering.Domain.ValueObjects
                 state,
                 zipCode
             );
+        }
+
+        private static void ValidateRequired(string? value, string fieldName)
+        {
+            if (string.IsNullOrWhiteSpace(value))
+                throw new RequiredFieldException(fieldName);
         }
     }
 }

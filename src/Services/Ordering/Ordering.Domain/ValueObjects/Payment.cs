@@ -35,14 +35,18 @@
                 || cardNumber.Length != CardNumberLength 
                 || !long.TryParse(cardNumber, out _))
                 throw new InvalidCardNumberException(cardNumber);
+
             if (string.IsNullOrWhiteSpace(expiration))
                 throw new InvalidExpirationException(expiration);
+
             if (string.IsNullOrWhiteSpace(cvv) 
                 || cvv.Length != CVVLength 
                 || !int.TryParse(cvv, out _))
                 throw new InvalidCVVException(CVVLength,cvv);
+
             if (string.IsNullOrWhiteSpace(paymentMethod))
-                throw new EmptyPaymentMethodException();
+                throw new RequiredFieldException(paymentMethod);
+
             return new Payment(cardName, cardNumber, expiration, cvv, paymentMethod);
         }
     }

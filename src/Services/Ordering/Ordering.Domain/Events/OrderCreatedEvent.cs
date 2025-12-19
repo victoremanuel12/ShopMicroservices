@@ -3,6 +3,6 @@ using Ordering.Domain.Models;
 
 namespace Ordering.Domain.Events
 {
-    public record OrderCreatedEvent(Order Order) : IDomainEvent;
+    internal record OrderCreatedEvent(Order Order) : IDomainEvent;
   
 }

@@ -1,6 +1,8 @@
-﻿namespace Ordering.Domain.Exceptions
+﻿using Ordering.Domain.Exceptions.Abstraction;
+
+namespace Ordering.Domain.Exceptions
 {
-    public class NegativeQuantityException : DomainException
+    internal class NegativeQuantityException : DomainException
     {
         public NegativeQuantityException()
             : base("Quantity cannot be negative") { }

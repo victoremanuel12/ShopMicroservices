@@ -2,7 +2,7 @@
 {
     public record CustomerId : Id<Guid>
     {
-        private CustomerId(Guid value) : base(value)
+        protected CustomerId(Guid value) : base(value)
         {
         }
         public static CustomerId New() => New<CustomerId>();

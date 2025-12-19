@@ -7,12 +7,10 @@
         {
             var typeName = GetType().Name;
             if (value == null)
-                throw new DomainException($"{typeName} value cannot be null.");
+                throw new IdValueNullException(typeName);
 
             if (value is Guid guid && guid == Guid.Empty)
-                throw new DomainException($"{typeName}  value cannot be  empty ");
-
-            Value = value;
+                throw new EmptyGuidIdException(typeName);
         }
         public static TId New<TId>() where TId : Id<TValue>
         {
@@ -22,7 +20,7 @@
                 return (TId)Activator.CreateInstance(typeof(TId), newValue)!;
             }
 
-            throw new DomainException($"Cannot auto-generate value for {typeof(TValue).Name}");
+            throw new UnsupportedIdAutoGenerationException(typeof(TValue).Name);
         }
 
         public static TId Rehydrate<TId>(TValue value) where TId : Id<TValue>

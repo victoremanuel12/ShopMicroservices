@@ -1,4 +1,6 @@
-﻿]namespace Ordering.Domain.Exceptions
+﻿using Ordering.Domain.Exceptions.Abstraction;
+
+namespace Ordering.Domain.Exceptions
 {
     internal class InvalidExpirationException : DomainException
     {

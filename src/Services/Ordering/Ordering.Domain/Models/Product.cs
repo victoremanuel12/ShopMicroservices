@@ -14,7 +14,7 @@
         public static Product Create(ProductId id, string name, decimal price)
         {
             if (string.IsNullOrWhiteSpace(name))
-                throw new EmptyFirstNameException();
+                throw new RequiredFieldException(name);
 
             if (decimal.IsNegative(price))
                 throw new NegativePriceException();

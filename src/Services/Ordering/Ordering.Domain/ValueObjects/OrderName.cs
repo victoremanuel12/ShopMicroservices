@@ -8,13 +8,11 @@
         public static OrderName Create(string value)
         {
             if (string.IsNullOrWhiteSpace(value))
-            {
                 throw new ArgumentException("Order name cannot be null or empty.");
-            }
+
             if (value.Length > MaxLength)
-            {
                 throw new ArgumentException("Order name cannot exceed 100 characters.");
-            }
+
             return new OrderName(value);
         }
     }
